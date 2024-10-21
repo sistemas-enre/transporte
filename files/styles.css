@@ -107,6 +107,10 @@ body {
 
 /* Estilo de la cabecera del chat */
 #cabecera {
+    position: fixed;
+    width: -webkit-fill-available;
+    z-index: 1;
+    
     background-color: #007bff;
     color: white;
     padding: 15px;
@@ -117,6 +121,11 @@ body {
 
 /* Estilo de la ventana del chat */
 #principal {
+    
+    position: fixed;
+    top: 66px;
+    width: -webkit-fill-available;
+
     margin-top: 0px;
     background-color: white;
     height: calc(100% - 60px); /*-200px*/
@@ -127,8 +136,9 @@ body {
     
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     flex-direction: column;
+
 }
 
 
@@ -168,6 +178,7 @@ body {
     padding: 20px;
     background-color: #f4f4f9;
     display: flex;
+    display: none;
     gap: 10px;
     justify-content: space-around;
     height: 70px;
@@ -248,7 +259,8 @@ body {
     text-align: center;
     min-width: 300px;
     width: 32%;
-    margin-top: -100px;
+    margin-top: 13vh;
+    
 }
 
 .logo {

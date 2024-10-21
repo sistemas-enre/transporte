@@ -582,7 +582,7 @@
         }
         
         function loadEquipamiento(){
-            $("#principal").css("display","block");
+            //$("#principal").css("display","block");
             if(typeof XLSX == "undefined") {
                 $.getScript('files/xlsx/xlsx.0.18.5.full.min.js', function() {
                     htmlEquipamiento();
@@ -600,12 +600,10 @@
 
 
 
-        function htmlRes(){
+        function htmlRes(empresa){
             $('#principal').html(`
-                        <h1>Resolucion</h1>
-
                         <div class="container mt-5">
-                            <h2>Tabla de Resoluciones</h2>
+                            <h2>Tabla de Resoluciones de <span id="empresa">${empresa}</span></h2>
 
                             <!-- Botón para agregar nueva resolución -->
                             <button id="agregar-resolucion" class="btn btn-custom">Agregar nueva resolución</button>
@@ -765,6 +763,23 @@
                     Desde: data[1],
                     Hasta: data[2]
                 }));
+
+
+                /*
+                										
+                ID_SUBEMPRESA	
+                SUBEMPRESA	
+                TIPO DE EQUIPO	
+                "TIPO_ELEM_IDCAMMESA"	
+                "#EQP CAMMESA"	
+                "CODIGO TRANSENER"	
+                ESTACION	
+                DESCRIPCION	
+                "TENSION kV"	
+                INICIO	
+                FIN                
+                
+                */
             });
 
             //Seleccionar el primer registro de la tabla y desencadenar las acciones de del click.
@@ -776,12 +791,12 @@
             $("#principal").css("display","flex");
             if(typeof XLSX == "undefined") {
                 $.getScript('files/xlsx/xlsx.0.18.5.full.min.js', function() {
-                    htmlRes();
+                    htmlRes(empresa);
                     logicaRes();
 
                 });
             }else{
-                htmlRes();
+                htmlRes(empresa);
                 logicaRes();
             }
             
