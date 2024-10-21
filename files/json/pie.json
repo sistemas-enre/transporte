@@ -1,0 +1,7 @@
+{
+    "items":[
+        {"name":"1", "show":"Sistema de Transporte de Energía Eléctrica en Alta Tensión", "tiopoaccion":"modal","accion":"modal(1)"},
+        {"name":"2", "show":"Total de Penalizaciones a formular", "tiopoaccion":"modal","accion":"modal(2)"},
+        {"name":"3", "show":"Desarrollado por la División de Desarrollo de Sistemas Informáticos del ENRE", "tiopoaccion":"modal","accion":"modal(3)"}
+    ]
+}

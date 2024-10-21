@@ -1,0 +1,427 @@
+:root {
+    --ancho-sidebar: 250px; /* Definir una variable CSS */
+}
+
+/* Reset de márgenes y paddings */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    display: flex;
+    height: 100vh;
+    background-color: #f4f4f9;
+}
+
+/* Estilo del contenedor del menú lateral */
+#sidebar {
+    width: var(--ancho-sidebar);
+    background-color: #333;
+    color: white;
+    position: fixed;
+    height: 100%;
+    transition: transform 0.5s ease;
+    transform: translateX(-100%);
+    z-index: 10;
+}
+
+#sidebar.active {
+    transform: translateX(0);
+}
+
+#sidebar ul {
+    list-style-type: none;
+    padding: 20px;
+}
+
+#sidebar ul li {
+    padding: 15px 0;
+    padding-left: 15px;
+    cursor: pointer;
+    border-bottom: 1px solid #444;
+}
+
+#sidebar > ul > div:first-child > a > li {
+    margin-top: 45px;
+    display: block;
+}
+
+#sidebar ul li:hover {
+    background-color: #555;
+}
+
+#sidebar a{
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Estilo del botón de menú */
+#menu-btn {
+    position: fixed;
+    left: 20px;
+    top: 15px;
+    background-color: #333;
+    color: white;
+    padding: 10px 15px;
+    cursor: pointer;
+    z-index: 20;
+    width: 210px;
+    transition: top 0.7s ease, left 0.7s ease,width 0.7s ease,border-radius 7s ease;
+    height: 44px;
+}
+#menu-btn.active {
+    top: 6.5px;
+    left: 6.5px;
+    height: 44px;
+    width: 44px;
+    border-radius: 22px;
+    transition: top 0.7s ease, left 0.5s ease,width 0.3s ease;
+}
+
+#menu-btn:hover {
+    background-color: #555;
+}
+
+
+#menu-btn span{
+    transition: opacity 0.3s ease 0.3s;
+}
+#menu-btn.active span{
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+/* Contenedor principal del contenido */
+#content {
+    flex: 2;
+    margin-left: var(--ancho-sidebar);
+    padding: 0px;
+    transition: margin-left 0.3s ease;
+}
+
+#content.active {
+    margin-left: 0;
+}
+
+/* Estilo de la cabecera del chat */
+#cabecera {
+    background-color: #007bff;
+    color: white;
+    padding: 15px;
+    font-size: 24px;
+    text-align: center;
+    border-radius: 0px;
+}
+
+/* Estilo de la ventana del chat */
+#principal {
+    margin-top: 0px;
+    background-color: white;
+    height: calc(100% - 60px); /*-200px*/
+    border-radius: 0px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    overflow-y: auto;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+
+
+
+/* Estilo de las entradas del chat */
+.message {
+    margin-bottom: 15px;
+}
+
+.message.user {
+    text-align: right;
+}
+
+.message p {
+    display: inline-block;
+    padding: 10px 15px;
+    border-radius: 20px;
+    background-color: #007bff;
+    color: white;
+    max-width: 70%;
+}
+
+.message.user p {
+    background-color: #f1f1f1;
+    color: #333;
+}
+
+
+
+
+/* Estilo del pie de página con el input de chat */
+#pie {
+    position: fixed;
+    bottom: 0;
+    width: calc(100% - var(--ancho-sidebar));
+    padding: 20px;
+    background-color: #f4f4f9;
+    display: flex;
+    gap: 10px;
+    justify-content: space-around;
+    height: 70px;
+}
+
+#pie.active {
+    width: 100%;
+}
+
+#pie *{
+    background-color: #d4d4d900;
+    color: #666;
+    border-radius: 10px;
+    padding: 10px 20px 10px 20px;
+}
+
+#chat-input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 20px;
+    border: 1px solid #ddd;
+}
+
+#send-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+#send-btn:hover {
+    background-color: #0056b3;
+}
+
+@media (max-width: 768px) {
+    #sidebar {
+        transform: translateX(-100%);
+        background-color: #303030d0;
+        height: auto;
+    }
+
+    #content {
+        margin-left: 0;
+    }
+
+    #pie {
+        width: 100%;
+    }
+
+    #menu-btn {
+        background-color: #303030e0;
+    }
+    #menu-btn:hover {
+        background-color: #222;
+    }
+        
+    #sidebar ul li:hover {
+        background-color: #303030;
+    }
+
+}
+
+
+
+
+
+
+
+
+
+.login-box {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    min-width: 300px;
+    width: 32%;
+    margin-top: -100px;
+}
+
+.logo {
+    max-width: 200px;
+    margin-bottom: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+input {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+#user{
+    float:right;
+    margin-top: -37px;
+
+}
+
+.circle{
+    display: none;
+    border-radius: 50%;
+    background-color: #cec197;
+    color: #3f698f;
+    font-size: smaller;
+    font-family: fantasy;
+    width: 35px;
+    height: 35px;
+    padding-top: 5px;
+}
+.agente{
+    font-size: x-small;
+    display: none;
+}
+.mostrar {
+    display: inline-block !important;
+}
+
+
+.margenSuperior{
+    height: 50px;
+    margin-top: 0px;
+}
+
+#cuadroResumen{
+    font-size: small;
+}
+
+#cuadroResumen_wrapper{
+    font-size: small;
+    width:950px;
+}
+
+.red{
+    color: rgb(0, 0, 0);
+    background-color: rgb(255, 136, 136);
+    padding: 3px;
+    border-radius: 12px;
+    width: 80px;
+    display: block;
+    text-align: center;
+    border: solid 1px;
+    border-color: #007bff;
+}
+
+.yellow{
+    color: rgb(0, 0, 0);
+    background-color: rgb(255, 250, 186);
+    padding: 3px;
+    border-radius: 12px;
+    width: 80px;
+    display: block;
+    text-align: center;
+    border: solid 1px;
+    border-color: #007bff;
+}
+.green{
+    color: rgb(0, 0, 0);
+    background-color: rgb(167, 206, 167);
+    padding: 3px;
+    border-radius: 12px;
+    width: 80px;
+    display: block;
+    text-align: center;
+    border: solid 1px;
+    border-color: #007bff;
+}
+
+
+#tabla_equipamiento{
+    width:100%;
+    font-size: smaller;
+}
+
+
+.submenu {
+    display: none;
+    list-style-type: none;
+    padding-left: 20px;
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+}
+
+#sidebar li:hover .submenu {
+    display: block;
+}
+
+#sidebar li.active .submenu {
+    display: block;
+}
+
+.submenu li {
+    padding: 10px 0;
+}
+
+
+
+
+
+
+
+
+
+        /* Botones personalizados */
+        .btn-custom {
+            background-color: #007bff; /* Azul similar al de tu header */
+            color: white;
+            border: none;
+        }
+
+        .btn-custom:hover {
+            background-color: #0056b3; /* Azul más oscuro al hacer hover */
+        }
+
+        /* Estilo para los botones de acción en la tabla */
+        .btn-accion {
+            background-color: #343a40; /* Color oscuro para combinar con el sidebar */
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            margin-right: 5px;
+            font-size: 0.9em;
+        }
+
+        .btn-accion:hover {
+            background-color: #23272b;
+        }
+
+        /* Estilos para la modal */
+        .modal-header {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .modal-footer {
+            background-color: #f1f1f1;
+        }

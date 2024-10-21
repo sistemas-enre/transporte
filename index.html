@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="files/styles.css">
+    <link rel="stylesheet" href="files/Datatables/dataTables.dataTables.css">
+    <link rel="stylesheet" href="files/Datatables/buttons.dataTables.css">
+    <link rel="stylesheet" href="files/Datatables/searchPanes.dataTables.css">
+    <link rel="stylesheet" href="files/Datatables/select.dataTables.css">
+    <title>Sistema de Transporte de Energía Eléctrica en Alta Tensión - Total de Penalizaciones a formular</title>
+    
+    <!--Content Security Policy (CSP): Implementa un CSP estricto que bloquee la ejecución de scripts no autorizados, lo cual reduce las posibilidades de inyección de JavaScript malicioso.-->
+    <!--meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' http://172.30.10.102:8080 https://cdn.jsdelivr.net 'nonce-rguzman'; connect-src 'self' http://172.30.10.102:8080;"-->
+    <!--meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' http://172.30.10.102:8080; connect-src 'self' http://172.30.10.102:8080 https://api.cammesa.com;"-->
+
+    <!--link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"-->
+    <link href="files/bootstrap/bootstrap.min.css" rel="stylesheet">
+    <!--script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script-->
+    <script src="files/bootstrap/bootstrap.bundle.min.js"></script>
+
+</head>
+<body>
+    <!-- Botón para mostrar/ocultar el menú -->
+    <div id="menu-btn">☰<span> Menú</span> </div>
+
+    <!-- Menú lateral -->
+    <div id="sidebar" class="active">
+        <ul>
+            <li>Inicio</li>
+            <li>Perfil</li>
+            <li>Configuración</li>
+            <li>Salir</li>
+        </ul>
+    </div>
+
+    <!-- Contenido principal -->
+    <div id="content">
+        <!-- Cabecera del chat -->
+        <div id="cabecera">
+            <div>Transporte</div>
+            <div id="user">
+            </div>
+        </div>
+
+        <!-- Ventana del chat -->
+        <div id="principal">
+            <!--div class="message user">
+                <p>Hola, ¿cómo estás?</p>
+            </div>
+            <div class="message">
+                <p>¡Hola! Estoy bien, ¿y tú?</p>
+            </div-->
+            <div class="login-box">
+                <img src="files/img/enre.jpg" alt="Logo del Ente Nacional Regulador de la Electricidad" class="logo">
+                <form id="login-form">
+                    <input type="text" id="username" name="username" placeholder="Username" required>
+                    <input type="password" id="password" name="password" placeholder="Password" required>
+                    <button type="submit">Login</button>
+                </form>
+            </div>
+    
+            
+        </div>
+
+
+        <!-- Pie de página con input de chat -->
+        <div id="pie">
+            <!--input type="text" id="chat-input" placeholder="Escribe un mensaje..."-->
+            <!--button id="send-btn">Enviar</button-->
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="files/jquery/jquery-3.7.1.min.js" nonce="rguzman"></script>
+    <script src="files/Datatables/Datatables.js" nonce="rguzman"></script>
+    <script src="files/Datatables/dataTables.searchPanes.js" nonce="rguzman"></script>
+    <script src="files/Datatables/searchPanes.dataTables.js" nonce="rguzman"></script>
+    <script src="files/Datatables/dataTables.select.js" nonce="rguzman"></script>
+    <script src="files/Datatables/select.dataTables.js" nonce="rguzman"></script>
+    <script src="files/Datatables/dataTables.buttons.js" nonce="rguzman"></script>
+    <script src="files/Datatables/buttons.dataTables.js" nonce="rguzman"></script>
+
+    <script nonce="rguzman">
+        resaltado = 'font-weight: bold; text-decoration: underline;'
+        function print(str){
+            str=str.trimRight();
+            str=(str.substr(-1)=='*')?str.substr(0,str.length-1):str;
+            let cant=parseInt((str.length-str.replaceAll('*','').length+1)/2);
+            //console.log('cant=',cant, ' str=',str , ' strX=',str.replaceAll('*','%c') );
+            if(cant == 1){
+                console.log(str.replaceAll('*','%c'),resaltado,'');    
+            }else if(cant == 2){
+                console.log(str.replaceAll('*','%c'),resaltado,'',resaltado,'');    
+            }else if(cant == 3){
+                console.log(str.replaceAll('*','%c'),resaltado,'',resaltado,'',resaltado,'');    
+            }else if(cant == 4){
+                console.log(str.replaceAll('*','%c'),resaltado,'',resaltado,'',resaltado,'',resaltado,'');    
+            }else if(cant == 5){
+                console.log(str.replaceAll('*','%c'),resaltado,'',resaltado,'',resaltado,'',resaltado,'',resaltado,'');    
+            }else if(cant == 6){
+                console.log(str.replaceAll('*','%c'),resaltado,'',resaltado,'',resaltado,'',resaltado,'',resaltado,'',resaltado,'');    
+            }else if(cant == 7){
+                console.log(str.replaceAll('*','%c'),resaltado,'',resaltado,'',resaltado,'',resaltado,'',resaltado,'',resaltado,'',resaltado,'');    
+            }else{
+                console.log(str);
+            }
+        }
+        
+        function getJWT(){
+            x=['.',...[...new Set(performance.timing.navigationStart.toString().split('').reverse())]];
+            vec = JSON.parse(sessionStorage.getItem('vdv'));
+            function recursivo(v,i){
+                if(typeof(v[0])=='object' && typeof(x[i+1])!='undefined'){
+                    return v.map(b=>recursivo(b,i+1)).join(x[i]);
+                }
+                else{
+                    return v.join(x[i]);
+                }
+            }
+            result=recursivo(vec,0);
+            console.log('result = ',result);
+        }
+
+        // Función para mostrar/ocultar el menú lateral con jQuery
+        $('#menu-btn').on('click', function () {
+            $('#sidebar').toggleClass('active');
+            $('#content').toggleClass('active');
+            $('#pie').toggleClass('active');
+            $('#menu-btn').toggleClass('active');
+            $('#menu-btn span').toggleClass('active');
+            
+        });
+
+        /*
+        $.getScript("files/js_menu.js")
+        .done(function() {
+            console.log("files/js_menu.js cargado");
+            return $.getScript("files/js_pie.js");
+        }).done(function() {
+            console.log("files/js_pie.js cargado");
+            fd_inicio();
+        })
+        .fail(function(jqxhr, settings, exception) {
+            if (settings.url === "files/js_menu.js") {
+                console.error("Error al cargar files/js_menu.js:", exception);
+            } else if (settings.url === "files/js_pie.js") {
+                console.error("Error al cargar files/js_pie.js:", exception);
+            } else {
+                console.error("Error desconocido:", exception);
+            }
+        });*/
+
+
+
+
+        function loadJsonFile(url) {
+            return $.getJSON(url)
+                .then(data => {
+                    //console.log("Se cargó exitosamente el archivo %c" + url + ".",resaltado)
+                    print(`Se cargó exitosamente el archivo *${url}*.`);
+                    return { success: true, data: data, url: url };
+                })
+                .catch((jqxhr, textStatus, error) => {
+                    //console.log("Falló la carga del archivo %c" + url + ".", resaltado)
+                    print(`Falló la carga del archivo *${url}*.`);
+                    return { success: false, error: error, url: url };
+                });
+        }
+
+
+        function loadJsonFiles(archivos_json,callback) {
+            // Crear un array de promesas para manejar la carga de cada archivo
+            let promises = archivos_json.map(file => 
+                {
+                    if (typeof(file.archivo_principal)=='undefined'){
+                        print(`Se genera la Promesa de *${JSON.stringify(file)}*`)
+                        return new Promise((resolve, reject) => {
+                            if (true) {
+                                resolve({success: true, data: file, url: null}); // Si la operación es exitosa, se llama a resolve
+                            } else {
+                                reject('Ocurrió un error en la promesa.');
+                            }
+                        })
+                    }else{
+                        return loadJsonFile(file.archivo_principal)
+                        .then(result => {
+                            if (!result.success) {
+                                //console.log("Intentando la carga de %c" + file.archivo_backup + "%c, por falla en la carga de %c"+file.archivo_principal+"%c",resaltado,'',resaltado);
+                                print("Intentando la carga de *" + file.archivo_backup + "*, por falla en la carga de *"+file.archivo_principal+"*")
+                                return loadJsonFile(file.archivo_backup);
+                            }
+                            return result;  // Retornar el resultado si la carga fue exitosa
+                        });
+                    }
+                }
+            );
+
+            // Usar $.when para esperar a que todas las promesas se completen
+            $.when.apply($, promises).then(function(...results) {
+                // Los resultados de todas las promesas se devuelven como un array
+                let allResults = results.map(result => {
+                    return result.success ? result.data : null;
+                });
+
+                // Verificar si todas las cargas fueron exitosas
+                if (allResults.every(data => data !== null)) {
+                    print("Todos los archivos se cargaron correctamente.");
+                    //console.log("Todos los archivos se cargaron correctamente.");
+                    callback(...allResults);
+                } else {
+                    print("Error en la carga de algunos archivos.");
+                    //console.error("Error en la carga de algunos archivos.");
+                }
+            }).fail(function() {
+                print("Error general en la carga de archivos.");
+                console.error("Error general en la carga de archivos.");
+            });
+        }
+
+        // Ejemplo de uso con laestructura
+        let archivos_json = [
+            {"archivo_principal": "files/json/menu.json", "archivo_backup": "files/json/menu5.json"},
+            {"archivo_principal": "files/json/pie.json", "archivo_backup": "files/json/pie5.json"}
+        ];
+
+        loadJsonFiles(archivos_json,fd_inicio);
+
+        function fd_inicio(data1, data2){
+            
+            //$('#sidebar').html('<ul></ul>');
+            //data1.items.map(item => $('#sidebar ul').crearItemMenu(item));
+            $('#sidebar').crearMenu(data1);
+
+            $('#pie').html('');
+            data2.items.map(item => $('#pie').crearTarjetaPie(item.show, item.accion));
+        }
+/*
+        loadJsonFiles(
+            [
+                {
+                    "items":
+                        [
+                            {"name":"inicio", "show":"Groso", "tiopoaccion":"redirigir","accion":"login"}
+                            ,{"name":"resoluciones", "show":"Resoluciones", "tiopoaccion":"redirigir","accion":"resoluciones"}
+                            ,{"name":"empresa", "show":"Empresa", "tiopoaccion":"redirigir","accion":"empresa"}
+                        ]
+                }
+                ,{
+                    "archivo_principal": "files/json/pie4.json"
+                    ,"archivo_backup": "files/json/pie.json"
+                }
+            ]
+            ,function(data1,data2){
+                $('#sidebar').html('<ul></ul>');
+                data1.items.map(
+                    item => 
+                        $('#sidebar ul').crearItemMenu(item.show)
+                );
+                $('#pie').html('');
+                data2.items.map(
+                    item => 
+                        $('#pie').crearTarjetaPie(item.show)
+                );
+            }
+        )        
+*/
+
+        $.fn.extend({
+            crearTarjetaPie: function(texto,accion) {
+                return this.append('<div>' + texto + '</div>');
+            },
+            crearMenu: function(menuData) {
+                const menu = $('<ul></ul>');
+                menuData.items.forEach(item => {
+                    const div = $('<div></div>');
+                    const li = $('<li></li>').text(item.texto);
+                    const a = $('<a></a>').attr('href', 'javascript:void(0);');
+
+                    if (item.accion === ">>") {
+                        a.attr('onclick', `toggleSubmenu('${item.id}')`);
+                        //li.append(a);
+                        a.append(li);
+
+                        // Crear submenú
+                        const submenu = $('<ul></ul>').attr('id', item.id).addClass('submenu');
+                        item.items.forEach(subitem => {
+                            const subLi = $('<li></li>').text(subitem.texto);
+                            const subA = $('<a></a>').attr('href', `javascript:${subitem.accion}`);
+                            //subLi.append(subA);
+                            subA.append(subLi);
+                            //submenu.append(subLi);
+                            submenu.append(subA);
+                        });
+                        //li.append(submenu);
+                        div.append(a);
+                        div.append(submenu);
+                    } else {
+                        a.attr('href', `javascript:${item.accion}`);
+                        //li.append(a);
+                        a.append(li);
+                        div.append(a);
+                    }
+                    
+                    menu.append(div);
+                });
+
+                this.html(menu);  // Añadir el menú generado al elemento seleccionado con jQuery
+                return this;        // Permitir encadenamiento de funciones jQuery
+            },
+            mostrarUsuario: function(inicial, nombre){
+                el = this.html(`
+                    <div>
+                        <span class="circle">${inicial}</span>
+                        <span class="agente">${nombre}</span>
+                    </div>
+                `);
+                return el;
+            }
+        });
+
+
+        // Función para mostrar/ocultar submenús
+        function toggleSubmenu(id) {
+            $('#' + id).toggle();
+        }
+
+        // Usar el método personalizado
+        
+
+
+
+        function saveJWT(jwt){
+            x = [...new Set(performance.timing.navigationStart.toString().split('').reverse())];
+            sessionStorage.setItem('vdv', JSON.stringify(
+                jwt
+                .split('.')
+                .map(a=>a.split(x[0]))
+                .map(a=>a.map(a=>a.split(x[1])))
+                .map(a=>a.map(a=>a.map(a=>a.split(x[2]))))
+                .map(a=>a.map(a=>a.map(a=>a.map(a=>a.split(x[3])))))
+                .map(a=>a.map(a=>a.map(a=>a.map(a=>a.map(a=>a.split(x[4]))))))
+                .map(a=>a.map(a=>a.map(a=>a.map(a=>a.map(a=>a.map(a=>a.split(x[5])))))))
+                .map(a=>a.map(a=>a.map(a=>a.map(a=>a.map(a=>a.map(a=>a.map(a=>a.split(x[6]))))))))
+                .map(a=>a.map(a=>a.map(a=>a.map(a=>a.map(a=>a.map(a=>a.map(a=>a.map(a=>a.split(x[7])))))))))
+                .map(a=>a.map(a=>a.map(a=>a.map(a=>a.map(a=>a.map(a=>a.map(a=>a.map(a=>a.map(a=>a.split(x[8]))))))))))
+                .map(a=>a.map(a=>a.map(a=>a.map(a=>a.map(a=>a.map(a=>a.map(a=>a.map(a=>a.map(a=>a.map(a=>a.split(x[9])))))))))))
+            ));
+            print(`Se guardó el *JWT* e *vdv*.`);
+        }
+
+        $(document).ready(function() {
+            $('#login-form').on('submit', function(event) {
+                event.preventDefault();
+                
+                // Obtener los valores del formulario
+                var username = $('#username').val();
+                var password = $('#password').val();
+                
+                print(`username: ${username} - password: ${password}.`)
+                //console.log("username: ", username, " - password: ", password)
+                // Realizar la solicitud POST
+                $.ajax({
+                    url: 'http://172.30.10.102:8080/Login', // Reemplaza con la URL de tu API
+                    type: 'POST',
+                    contentType: 'application/x-www-form-urlencoded',
+                    data: {
+                        campoUsuario: username,
+                        campoClave: password
+                    },
+                    success: function(response) {
+                        // Manejar la respuesta exitosa
+                        console.log('Éxito:', response);
+                        if(response.estado_app == 1){
+                            print('Inicio de sesión *exitoso*');
+                            saveJWT(response.data.token);
+                            login(response.data.usuario)
+                        }else{
+                            alert('Login incorrecto');
+                        }
+                        
+
+                        // Redirigir a otra página, mostrar un mensaje, etc.
+                    },
+                    error: function(xhr, status, error) {
+                        // Manejar errores
+                        console.error('Error:', status, error);
+                        alert('Error al iniciar sesión');
+                    }
+                });
+            });
+        });
+
+
+        function logicaEquipamiento(){
+
+            $('#fileInput').on('change', handleFile);
+            $('#loadFromAPI').on('click', loadFileFromAPI);
+
+            const requiredColumns = [
+                'ELEMENTO', 'ELEMENTO ID', 'ID BDE', 'ID PAGOTRAN', 'DESCRIPCION',
+                'FECHA DE ENTRADA EN SERVICIO COMERCIAL', 'ID AGENTE', 'NEMO AGE'
+            ];
+
+            const tableColumns = [
+                'HOJA', 'ELEMENTO', 'ELEMENTO ID', 'ID BDE', 'ID PAGOTRAN', 'DESCRIPCION',
+                'TENSION NOMINAL [KV]', 'POTENCIA NOMINAL [MVA]', 'LONGITUD [KM]',
+                'FECHA DE ENTRADA EN SERVICIO COMERCIAL', 'ID AGENTE', 'NEMO AGE', 'OTROS'
+            ];
+
+            function normalizeString(str) {
+                return str ? str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toUpperCase() : '';
+            }
+
+            function formatDate(excelDate) {
+                if (!excelDate || isNaN(excelDate)) return "N/C";
+                const date = XLSX.SSF.parse_date_code(excelDate);
+                if (!date) return "N/C";
+                return `${date.y}-${String(date.m).padStart(2, '0')}-${String(date.d).padStart(2, '0')} ${String(date.H).padStart(2, '0')}:${String(date.M).padStart(2, '0')}`;
+            }
+
+            function handleFile(event) {
+                const file = event.target.files[0];
+                
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    console.log(e.target.result);
+                    const data = new Uint8Array(e.target.result);
+                    console.log(data);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    processWorkbook(workbook);
+                };
+
+                reader.readAsArrayBuffer(file);
+            }
+
+            function loadFileFromAPI() {
+                const apiUrl = 'https://api.cammesa.com/pub-svc/public/findAttachmentByNemoId?attachmentId=Base%20de%20Datos%20El%C3%A9ctrica%20para%20Remuneraci%C3%B3n%20del%20Transporte.xlsx&docId=BA5C783935CC54B403258B93003CDB38&nemo=REMUNERACION_TRANS_ELECTRICA';
+
+                fetch(apiUrl)
+                    .then(response => response.arrayBuffer())
+                    .then(data => {
+                        console.log(data);
+                        const workbook = XLSX.read(data, { type: 'array' });
+                        processWorkbook(workbook);
+                    })
+                    .catch(error => {
+                        console.error('Error al cargar el archivo desde la API:', error);
+                    });
+            }
+            function processWorkbook(workbook) {
+                const $tableHeader = $('#tableHeader');
+                const $tableBody = $('#tableBody');
+
+                // Limpiar la tabla antes de agregar nuevos datos
+                $tableHeader.empty();
+                $tableBody.empty();
+
+                // Crear las cabeceras de la tabla
+                tableColumns.forEach(col => {
+                    $tableHeader.append(`<th>${col}</th>`);
+                });
+
+                isValid = true;
+                workbook.SheetNames.forEach(sheetName => {
+                    const worksheet = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { header: 1 });
+                    if (worksheet.length === 0) return;
+
+                    const headers = worksheet[0].map(col => normalizeString(col));
+                    const sheetData = worksheet.slice(1);
+
+                    // Verificar si las columnas requeridas están presentes
+                    const missingColumns = requiredColumns.filter(col => !headers.includes(normalizeString(col)));
+                    if (missingColumns.length > 0) {
+                        console.error(`La hoja "${sheetName}" no tiene las columnas requeridas:`, missingColumns);
+                        isValid = false;
+                        return;
+                    }
+
+                    // Procesar datos si la hoja es válida
+                    sheetData.forEach(row => {
+                        const rowData = {};
+                        tableColumns.forEach(col => {
+                            const normalizedCol = normalizeString(col);
+                            const index = headers.indexOf(normalizedCol);
+                            
+                            // Formatear fecha correctamente si es la columna de "FECHA DE ENTRADA EN SERVICIO COMERCIAL"
+                            if (normalizedCol === normalizeString('FECHA DE ENTRADA EN SERVICIO COMERCIAL') && index !== -1) {
+                                rowData[col] = formatDate(row[index]);
+                            } else {
+                                rowData[col] = (index !== -1) ? (row[index] || "N/C") : "N/C";
+                            }
+                        });
+
+                        // Extraer columnas adicionales no requeridas
+                        const extraColumns = {};
+                        headers.forEach((col, index) => {
+                            if (!requiredColumns.includes(col) && !tableColumns.includes(col)) {
+                                extraColumns[col] = row[index];
+                            }
+                        });
+
+                        // Crear la fila para DataTables
+                        const rowHTML = `<tr>
+                            <td>${sheetName}</td>
+                            ${tableColumns.slice(1, -1).map(col => `<td>${rowData[col]}</td>`).join('')}
+                            <td><pre>${JSON.stringify(extraColumns, null, 2).replaceAll('"','').replaceAll('{','').replaceAll('}','')}</pre></td>
+                        </tr>`;
+                        $tableBody.append(rowHTML);
+                    });
+                });
+
+                if (isValid) {
+                    $('#tabla_equipamiento').DataTable({
+                        pageLength: 10,
+
+                        /*
+                        initComplete: function () {
+                            this.api()
+                                .columns()
+                                .every(function () {
+                                    var column = this;
+                                    var title = column.footer().textContent;
+                    
+                                    // Create input element and add event listener
+                                    $('<input type="text" placeholder="Search ' + title + '" />')
+                                        .appendTo($(column.footer()).empty())
+                                        .on('keyup change clear', function () {
+                                            if (column.search() !== this.value) {
+                                                column.search(this.value).draw();
+                                            }
+                                        });
+                                });
+                        },*//*
+                        layout: {
+                            topStart: {
+                                buttons: ['searchPanes']
+                            }
+                        },/**/
+                        layout: {
+                            top1: {
+                                searchPanes: {
+                                    viewTotal: true
+                                }
+                            }
+                        },
+                        columnDefs: [
+                            {searchPanes: {show: true}, targets: [0]},
+                            {searchPanes: {show: false},targets: [1]},
+                            {searchPanes: {show: false},targets: [2]},
+                            {searchPanes: {show: false},targets: [3]},
+                            {searchPanes: {show: false},targets: [4]},
+                            {searchPanes: {show: false},targets: [5]},
+                            {searchPanes: {show: true}, targets: [6]},
+                            {searchPanes: {show: true}, targets: [7]},
+                            {searchPanes: {show: true}, targets: [8]},
+                            {searchPanes: {show: false},targets: [9]},
+                            {searchPanes: {show: false},targets: [10]},
+                            {searchPanes: {show: true}, targets: [11]},
+                            {searchPanes: {show: false},targets: [12]}
+                        ]
+                    });
+                } else {
+                    alert("El archivo tiene hojas que no cumplen con las columnas requeridas.");
+                }
+            }
+        }
+
+        function htmlEquipamiento(){
+            $('#principal').html(`
+                        <h1>Cargar Excel y generar DataTable</h1>
+                        <input type="file" id="fileInput" accept=".xlsx">
+                        <button id="loadFromAPI">Cargar desde API</button>
+                        <table id="tabla_equipamiento" class="display compact" >
+                            <thead>
+                                <tr id="tableHeader"></tr>
+                            </thead>
+                            <tbody id="tableBody"></tbody>
+                        </table>
+                    `);
+        }
+        
+        function loadEquipamiento(){
+            $("#principal").css("display","block");
+            if(typeof XLSX == "undefined") {
+                $.getScript('files/xlsx/xlsx.0.18.5.full.min.js', function() {
+                    htmlEquipamiento();
+                    logicaEquipamiento();
+
+                });
+            }else{
+                htmlEquipamiento();
+                logicaEquipamiento();
+            }
+            
+        }
+
+
+
+
+
+        function htmlRes(){
+            $('#principal').html(`
+                        <h1>Resolucion</h1>
+
+                        <div class="container mt-5">
+                            <h2>Tabla de Resoluciones</h2>
+
+                            <!-- Botón para agregar nueva resolución -->
+                            <button id="agregar-resolucion" class="btn btn-custom">Agregar nueva resolución</button>
+
+                            <!-- Tabla -->
+                            <table id="tabla-resoluciones" class="display table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>NroResolucion</th>
+                                        <th>Desde</th>
+                                        <th>Hasta</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Datos iniciales -->
+                                    <tr class="selected" selected>
+                                        <td>RES ENRE 661/23</td>
+                                        <td>2023-08-01</td>
+                                        <td>2023-10-31</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>RES ENRE 698/22</td>
+                                        <td>2023-01-01</td>
+                                        <td>2023-07-31</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>RES ENRE 147/22</td>
+                                        <td>2022-02-01</td>
+                                        <td>2022-12-31</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>RES ENRE 68/22</td>
+                                        <td>2022-02-01</td>
+                                        <td>No Vigente</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>RES ENRE 269/19</td>
+                                        <td>2019/08/01</td>
+                                        <td>2022/01/31</td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Modal para edición/agregar -->
+                        <div class="modal fade" id="modalEdicion" tabindex="-1" aria-labelledby="modalEdicionLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="modalEdicionLabel">Editar/Agregar Resolución</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form id="form-edicion">
+                                            <div class="mb-3">
+                                                <label for="nroResolucion" class="form-label">NroResolución:</label>
+                                                <input type="text" class="form-control" id="nroResolucion" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="desde" class="form-label">Desde:</label>
+                                                <input type="date" class="form-control" id="desde" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="hasta" class="form-label">Hasta:</label>
+                                                <input type="date" class="form-control" id="hasta" required>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                        <button type="submit" class="btn btn-custom" id="guardarCambios">Guardar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    `);
+        }
+        function logicaRes(){
+
+            // Inicializa DataTables
+            var tabla = $('#tabla-resoluciones').DataTable({
+                columnDefs: [
+                    {
+                        targets: 3, // Índice de la columna de acciones
+                        data: null,
+                        defaultContent: "<button class='btn-accion editar'>Editar</button> <button class='btn-accion eliminar'>Eliminar</button>"
+                    }
+                ],
+                colReorder: false,
+                ordering: false,  // Deshabilitar el reordenamiento para toda la tabla
+                order: [[1, 'desc']]  // Orden inicial en la primera columna de forma decreciente
+
+            });
+
+            // Mostrar modal para agregar nuevo registro
+            $('#agregar-resolucion').click(function() {
+                $('#modalEdicion').modal('show');
+                $('#form-edicion')[0].reset(); // Limpiar el formulario
+                $('#form-edicion').data('mode', 'add'); // Modo de agregar
+            });
+
+            // Cancelar edición/agregar (con Bootstrap se maneja automáticamente en el modal)
+
+            // Manejar envío del formulario
+            $('#guardarCambios').click(function() {
+                var nroResolucion = $('#nroResolucion').val();
+                var desde = $('#desde').val();
+                var hasta = $('#hasta').val();
+
+                // Verificar si estamos en modo agregar o editar
+                if ($('#form-edicion').data('mode') === 'edit') {
+                    // Editar registro
+                    var rowIndex = $('#form-edicion').data('rowIndex');
+                    tabla.row(rowIndex).data([nroResolucion, desde, hasta, null]).draw();
+                } else {
+                    // Agregar nuevo registro
+                    tabla.row.add([nroResolucion, desde, hasta, null]).draw();
+                }
+
+                $('#modalEdicion').modal('hide'); // Cerrar modal después de guardar
+            });
+
+            // Editar registro
+            $('#tabla-resoluciones tbody').on('click', 'button.editar', function() {
+                var data = tabla.row($(this).parents('tr')).data();
+                var rowIndex = tabla.row($(this).parents('tr')).index();
+
+                // Rellenar formulario con los datos de la fila seleccionada
+                $('#nroResolucion').val(data[0]);
+                $('#desde').val(data[1]);
+                $('#hasta').val(data[2]);
+
+                $('#modalEdicion').modal('show');
+                $('#form-edicion').data('mode', 'edit'); // Modo de edición
+                $('#form-edicion').data('rowIndex', rowIndex); // Índice de la fila a editar
+            });
+
+            // Eliminar registro
+            $('#tabla-resoluciones tbody').on('click', 'button.eliminar', function() {
+                if (confirm('¿Estás seguro de que deseas eliminar esta resolución?')) {
+                    tabla.row($(this).parents('tr')).remove().draw();
+                }
+            });
+
+            // Mostrar datos en consola al hacer clic en una fila
+            $('#tabla-resoluciones tbody').on('click', 'tr', function() {
+                var data = tabla.row(this).data();
+                console.log(JSON.stringify({
+                    NroResolucion: data[0],
+                    Desde: data[1],
+                    Hasta: data[2]
+                }));
+            });
+
+            //Seleccionar el primer registro de la tabla y desencadenar las acciones de del click.
+            //$('#tabla-resoluciones tbody tr:first').addClass('selected'); //innecesario ya que el siguiente desencadenador del click lo hace.
+            $('#tabla-resoluciones tbody tr:first').trigger('click');
+        }
+        
+        function loadRes(empresa){
+            $("#principal").css("display","flex");
+            if(typeof XLSX == "undefined") {
+                $.getScript('files/xlsx/xlsx.0.18.5.full.min.js', function() {
+                    htmlRes();
+                    logicaRes();
+
+                });
+            }else{
+                htmlRes();
+                logicaRes();
+            }
+            
+        }
+
+
+        
+        
+        function htmlResoluciones(){
+            $('#principal').html(`
+                        <h1>Cargar Excel y generar DataTable</h1>
+                        <input type="file" id="fileInput" accept=".xlsx">
+                        <button id="loadFromAPI">Cargar desde API</button>
+                        <table id="tabla_equipamiento" class="display compact" >
+                            <thead>
+                                <tr id="tableHeader"></tr>
+                            </thead>
+                            <tbody id="tableBody"></tbody>
+                        </table>
+                    `);
+        }
+                        
+        function loadResoluciones(){
+            $("#principal").css("display","block");
+            if(typeof XLSX == "undefined") {
+                $.getScript('files/xlsx/xlsx.0.18.5.full.min.js', function() {
+                    htmlResoluciones();
+                    logicaResoluciones();
+
+                });
+            }else{
+                htmlResoluciones();
+                logicaResoluciones();
+            }
+            
+    
+            
+        }
+                        
+        function loadInicio(){
+            
+
+            $('#principal').html(`
+                <div class='margenSuperior'></div>
+                <h1>Resumen de cálculos de penalizaciones</h1>
+                <table id='cuadroResumen' class='display nowrap compact' ></table>
+            `);
+
+            fetch("files/json/cuadroResumen.json?3")
+            .then(res => {
+                console.log('res',res);
+                return res.json();
+            })
+            .then(data => {
+                console.log('data',data);
+                miTabla = new DataTable('#cuadroResumen', {
+                    colReorder: false,
+                    ordering: false,  // Deshabilitar el reordenamiento para toda la tabla
+                    columns: [
+                        { title: 'Mes' },
+                        { title: 'Transener' },
+                        { title: 'Transba' },
+                        { title: 'Transnoa' },
+                        { title: 'Transnea' },
+                        { title: 'Epen' },
+                        { title: 'Distrocuyo' },
+                        { title: 'Transpa' },
+                        { title: 'Transcomahue' }
+                    ],
+                    data: data.map(obj => {
+                        let res = [obj.Mes, obj.Transener, obj.Transba, obj.Transnoa, obj.Transnea, obj.Epen, obj.Distrocuyo, obj.Transpa, obj.Transcomahue];
+                        return res;
+                    }),
+                    columnDefs: [
+                        {
+                            targets: [1, 2, 3, 4, 5, 6, 7, 8],
+                            render: function (data, type, row, meta) {
+                                return (
+                                    '<span class="' +
+                                    (data == 'Pendiente' ? 'red' : (data == 'Iniciado' ? 'yellow' : 'green')) +
+                                    '">' +
+                                    data +
+                                    '</span>'
+                                );
+                            }
+                        },
+                        {
+                            targets: 0,
+                            data: 0,
+                            render: function (data, type, row, meta) {
+                                return '<a href="#' + data + '">' + data + '</a>';
+                            },
+                            orderable: false  // Deshabilita el reordenamiento de la primera columna
+                        }
+                    ],
+                    paging: false,
+                    searching: false,
+                    scrollCollapse: true,
+                    scrollY: '600px',
+                    order: [[0, 'desc']]  // Orden inicial en la primera columna de forma decreciente
+                });
+
+            })
+            .then(_ => {
+                console.log('TERMINO:');
+            })
+            ;
+        }
+
+        function login(usuario){
+            loadJsonFiles(
+                [
+                    {
+                        "items": [{"nombre":usuario.replace('@enre.gov.ar',''), "iniciales":usuario.substr(0,2).toUpperCase()}]
+                    }
+                ]
+                ,function(data){
+                    data.items.map(
+                        item => {
+                            $('#user').mostrarUsuario(item.iniciales, item.nombre);
+                            $('#user *').fadeIn(3000);
+                            
+                        }
+                    );
+                }
+            );
+            
+            loadInicio();
+
+        }
+
+
+
+
+
+    </script>
+</body>
+</html>

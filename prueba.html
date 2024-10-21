@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabla de Resoluciones</title>
+    <!-- Incluye CSS de Bootstrap y DataTables -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
+    <style>
+        /* Botones personalizados */
+        .btn-custom {
+            background-color: #007bff; /* Azul similar al de tu header */
+            color: white;
+            border: none;
+        }
+
+        .btn-custom:hover {
+            background-color: #0056b3; /* Azul más oscuro al hacer hover */
+        }
+
+        /* Estilo para los botones de acción en la tabla */
+        .btn-accion {
+            background-color: #343a40; /* Color oscuro para combinar con el sidebar */
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            margin-right: 5px;
+            font-size: 0.9em;
+        }
+
+        .btn-accion:hover {
+            background-color: #23272b;
+        }
+
+        /* Estilos para la modal */
+        .modal-header {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .modal-footer {
+            background-color: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container mt-5">
+        <h2>Tabla de Resoluciones</h2>
+
+        <!-- Botón para agregar nueva resolución -->
+        <button id="agregar-resolucion" class="btn btn-custom">Agregar nueva resolución</button>
+
+        <!-- Tabla -->
+        <table id="tabla-resoluciones" class="display table table-striped">
+            <thead>
+                <tr>
+                    <th>NroResolucion</th>
+                    <th>Desde</th>
+                    <th>Hasta</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Datos iniciales -->
+                <tr>
+                    <td>001</td>
+                    <td>2023-01-01</td>
+                    <td>2023-12-31</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>002</td>
+                    <td>2024-01-01</td>
+                    <td>2024-12-31</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal para edición/agregar -->
+    <div class="modal fade" id="modalEdicion" tabindex="-1" aria-labelledby="modalEdicionLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEdicionLabel">Editar/Agregar Resolución</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="form-edicion">
+                        <div class="mb-3">
+                            <label for="nroResolucion" class="form-label">NroResolución:</label>
+                            <input type="text" class="form-control" id="nroResolucion" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="desde" class="form-label">Desde:</label>
+                            <input type="date" class="form-control" id="desde" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="hasta" class="form-label">Hasta:</label>
+                            <input type="date" class="form-control" id="hasta" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-custom" id="guardarCambios">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Incluye jQuery, Bootstrap JS y DataTables JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            // Inicializa DataTables
+            var tabla = $('#tabla-resoluciones').DataTable({
+                columnDefs: [
+                    {
+                        targets: 3, // Índice de la columna de acciones
+                        data: null,
+                        defaultContent: "<button class='btn-accion editar'>Editar</button> <button class='btn-accion eliminar'>Eliminar</button>"
+                    }
+                ]
+            });
+
+            // Mostrar modal para agregar nuevo registro
+            $('#agregar-resolucion').click(function() {
+                $('#modalEdicion').modal('show');
+                $('#form-edicion')[0].reset(); // Limpiar el formulario
+                $('#form-edicion').data('mode', 'add'); // Modo de agregar
+            });
+
+            // Cancelar edición/agregar (con Bootstrap se maneja automáticamente en el modal)
+
+            // Manejar envío del formulario
+            $('#guardarCambios').click(function() {
+                var nroResolucion = $('#nroResolucion').val();
+                var desde = $('#desde').val();
+                var hasta = $('#hasta').val();
+
+                // Verificar si estamos en modo agregar o editar
+                if ($('#form-edicion').data('mode') === 'edit') {
+                    // Editar registro
+                    var rowIndex = $('#form-edicion').data('rowIndex');
+                    tabla.row(rowIndex).data([nroResolucion, desde, hasta, null]).draw();
+                } else {
+                    // Agregar nuevo registro
+                    tabla.row.add([nroResolucion, desde, hasta, null]).draw();
+                }
+
+                $('#modalEdicion').modal('hide'); // Cerrar modal después de guardar
+            });
+
+            // Editar registro
+            $('#tabla-resoluciones tbody').on('click', 'button.editar', function() {
+                var data = tabla.row($(this).parents('tr')).data();
+                var rowIndex = tabla.row($(this).parents('tr')).index();
+
+                // Rellenar formulario con los datos de la fila seleccionada
+                $('#nroResolucion').val(data[0]);
+                $('#desde').val(data[1]);
+                $('#hasta').val(data[2]);
+
+                $('#modalEdicion').modal('show');
+                $('#form-edicion').data('mode', 'edit'); // Modo de edición
+                $('#form-edicion').data('rowIndex', rowIndex); // Índice de la fila a editar
+            });
+
+            // Eliminar registro
+            $('#tabla-resoluciones tbody').on('click', 'button.eliminar', function() {
+                if (confirm('¿Estás seguro de que deseas eliminar esta resolución?')) {
+                    tabla.row($(this).parents('tr')).remove().draw();
+                }
+            });
+
+            // Mostrar datos en consola al hacer clic en una fila
+            $('#tabla-resoluciones tbody').on('click', 'tr', function() {
+                var data = tabla.row(this).data();
+                console.log(JSON.stringify({
+                    NroResolucion: data[0],
+                    Desde: data[1],
+                    Hasta: data[2]
+                }));
+            });
+        });
+    </script>
+
+</body>
+</html>
