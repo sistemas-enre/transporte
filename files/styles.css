@@ -122,11 +122,11 @@ body {
 /* Estilo de la ventana del chat */
 #principal {
     
-    position: fixed;
-    top: 66px;
+    /*position: fixed;*/
+    /*margin-top: 66px;*/
     width: -webkit-fill-available;
 
-    margin-top: 0px;
+    margin-top: 66px;
     background-color: white;
     height: calc(100% - 60px); /*-200px*/
     border-radius: 0px;
