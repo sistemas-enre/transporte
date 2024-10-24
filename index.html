@@ -758,11 +758,17 @@
             // Mostrar datos en consola al hacer clic en una fila
             $('#tabla-resoluciones tbody').on('click', 'tr', function() {
                 var data = tabla.row(this).data();
-                console.log(JSON.stringify({
+                let rowSelected = JSON.stringify({
                     NroResolucion: data[0],
                     Desde: data[1],
                     Hasta: data[2]
-                }));
+                });
+
+                console.log(rowSelected);
+                
+                loadResolucion(rowSelected);
+
+
 
 
                 /*
@@ -804,37 +810,6 @@
 
 
         
-        
-        function htmlResoluciones(){
-            $('#principal').html(`
-                        <h1>Cargar Excel y generar DataTable</h1>
-                        <input type="file" id="fileInput" accept=".xlsx">
-                        <button id="loadFromAPI">Cargar desde API</button>
-                        <table id="tabla_equipamiento" class="display compact" >
-                            <thead>
-                                <tr id="tableHeader"></tr>
-                            </thead>
-                            <tbody id="tableBody"></tbody>
-                        </table>
-                    `);
-        }
-                        
-        function loadResoluciones(){
-            $("#principal").css("display","block");
-            if(typeof XLSX == "undefined") {
-                $.getScript('files/xlsx/xlsx.0.18.5.full.min.js', function() {
-                    htmlResoluciones();
-                    logicaResoluciones();
-
-                });
-            }else{
-                htmlResoluciones();
-                logicaResoluciones();
-            }
-            
-    
-            
-        }
                         
         function loadInicio(){
             
