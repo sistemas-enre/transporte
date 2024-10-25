@@ -4,6 +4,7 @@
         ,{"id":"BaseResXEmp", "texto":"Base de Resoluciones","accion":">>","items":[
             {"id":"BaseRes_1", "texto":"Epen","accion":"loadRes('Epen')"}
             ,{"id":"BaseRes_2", "texto":"Transpa","accion":"loadRes('Transpa')"}
+            ,{"id":"BaseRes_3", "texto":"Transnea","accion":"loadRes('Transnea')"}
             ,{"id":"BaseRes_3", "texto":"Transnoa","accion":"loadRes('Transnoa')"}
             ,{"id":"BaseRes_3", "texto":"Transba","accion":"loadRes('Transba')"}
             ,{"id":"BaseRes_3", "texto":"Transener","accion":"loadRes('Transener')"}

@@ -21,6 +21,8 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             border-radius: 5px;
             max-height: 30vh;
+            overflow-y: auto;
+            
         }
     </style>
 </head>
@@ -31,7 +33,6 @@
     <div id="output"></div>
 
     <script>
-        
         document.getElementById('inputFile').addEventListener('change', handleFile, false);
 
         function handleFile(event) {
@@ -52,21 +53,44 @@
             workbook.SheetNames.forEach(sheetName => {
                 const worksheet = workbook.Sheets[sheetName];
                 const jsonSheet = XLSX.utils.sheet_to_json(worksheet, { header: 1 }); // Convertimos la hoja a JSON sin cabezales
+                console.log("jsonSheet: ",jsonSheet);
                 
-                // Ignoramos la primera fila (títulos de columnas) y procesamos las demás
+                // Leer los encabezados (primera fila)
+                const headers = jsonSheet[0]; // Primera fila: encabezados
+                console.log("headers: ",headers);
+
                 const result = { "data": [] };
+
+                // Identificar las columnas que deben tener formato de fecha
+                const dateColumns = headers.map((header, index) => {
+                    const lowerHeader = header ? header.toString().toLowerCase() : '';
+                    return lowerHeader.includes('inicio') || lowerHeader.includes('fin') || lowerHeader.includes('fecha') || lowerHeader.includes('desde') || lowerHeader.includes('hasta') ? index : -1;
+                }).filter(index => index !== -1);
+
+                // Procesar las filas restantes
                 for (let i = 1; i < jsonSheet.length; i++) {
-                    const row = jsonSheet[i].map(value => {
-                        // Verificar si el valor es una fecha
-                        if (typeof value === 'object' && value instanceof Date) {
-                            // Convertir la fecha al formato AAAA-MM-DD
-                            const year = value.getFullYear();
-                            const month = String(value.getMonth() + 1).padStart(2, '0');
-                            const day = String(value.getDate()).padStart(2, '0');
-                            return `${year}-${month}-${day}`;
+                    let row = jsonSheet[i].map((value, columnIndex) => {
+                        // Solo dar formato de fecha a columnas identificadas
+                        //console.log(dateColumns);
+                        if (dateColumns.includes(columnIndex)) {
+                            if (typeof value === 'number') {
+                                const date = XLSX.SSF.parse_date_code(value);
+                                if (date) {
+                                    const year = date.y;
+                                    const month = String(date.m).padStart(2, '0');
+                                    const day = String(date.d).padStart(2, '0');
+                                    return `${year}-${month}-${day}`;
+                                }
+                            }
+                            if (typeof value === 'string' && /\d{2,4}[-/]\d{2}[-/]\d{2,4}/.test(value)) {
+                                return formatDateString(value); // Convertir a formato AAAA-MM-DD
+                            }
                         }
-                        return value; // Si no es fecha, se devuelve el valor sin cambios
+                        return value; // Si no es una columna de fecha, devolver el valor tal cual
                     });
+                    console.log(1, headers, row)
+                    row=row.concat(Array(headers.length-row.length).fill(null)); // Añadir valores nulos si faltan columnas
+                    console.log(2, headers, row)
                     result.data.push(row);
                 }
 
@@ -105,6 +129,19 @@
             }).catch(err => {
                 alert('Error al copiar el JSON: ', err);
             });
+        }
+
+        // Función para convertir fechas en cadena al formato AAAA-MM-DD
+        function formatDateString(dateStr) {
+            const dateParts = dateStr.split(/[-/]/);
+            if (dateParts.length === 3) {
+                // Aseguramos que los componentes estén en el formato AAAA-MM-DD
+                const year = dateParts[0].length === 4 ? dateParts[0] : dateParts[2];
+                const month = dateParts[1].padStart(2, '0');
+                const day = dateParts[0].length === 4 ? dateParts[2].padStart(2, '0') : dateParts[0].padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            }
+            return dateStr; // Devolver la cadena tal cual si no se puede parsear
         }
     </script>
 

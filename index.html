@@ -385,7 +385,13 @@
                     error: function(xhr, status, error) {
                         // Manejar errores
                         console.error('Error:', status, error);
-                        alert('Error al iniciar sesión');
+                        //alert('Error al iniciar sesión');
+
+
+                        login(username);
+                        
+
+
                     }
                 });
             });
@@ -609,7 +615,7 @@
                             <button id="agregar-resolucion" class="btn btn-custom">Agregar nueva resolución</button>
 
                             <!-- Tabla -->
-                            <table id="tabla-resoluciones" class="display table table-striped">
+                            <table id="tabla-resoluciones" class="display compact table table-striped">
                                 <thead>
                                     <tr>
                                         <th>NroResolucion</th>
@@ -686,6 +692,8 @@
                             </div>
                         </div>
                         
+                        <div id="resolucion" class="container mt-5"></div>
+                        
                     `);
         }
         function logicaRes(){
@@ -757,6 +765,8 @@
 
             // Mostrar datos en consola al hacer clic en una fila
             $('#tabla-resoluciones tbody').on('click', 'tr', function() {
+                $('#tabla-resoluciones tbody tr').removeClass("selected");
+                $(this).addClass("selected");
                 var data = tabla.row(this).data();
                 let rowSelected = JSON.stringify({
                     NroResolucion: data[0],
@@ -792,6 +802,251 @@
             //$('#tabla-resoluciones tbody tr:first').addClass('selected'); //innecesario ya que el siguiente desencadenador del click lo hace.
             $('#tabla-resoluciones tbody tr:first').trigger('click');
         }
+
+        function loadResolucion(rowSelected){
+            
+            htmlResolucion(empresa);
+            logicaResolucion();
+        
+        }
+        function logicaResolucion(){
+            // Listen for Bootstrap tab change
+/*
+            $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function () {
+                $(this).closest('.tab-content').find('.table').DataTable().columns.adjust();
+                });
+*/
+            document.querySelectorAll('button[data-bs-toggle="tab"]').forEach((el) => {
+                el.addEventListener('shown.bs.tab', () => {
+                    DataTable.tables({ visible: true, api: true }).columns.adjust();
+                });
+            });
+            
+            new DataTable('#myTable1', {
+                ajax: 'files/json/res_lineas.json',
+                paging: false,
+                columnDefs: [
+                    {target: 0, visible: false, searchable: false},
+                    {target: 1, visible: false, searchable: false},
+                    {target: 2, visible: false, searchable: false},
+                    {target: 4, visible: false, searchable: false},
+                    {target: 5, visible: false, searchable: false},
+                    {target: 6, visible: false, searchable: false},
+                    {target: 8, visible: false, searchable: false}
+                    
+                ]
+            });
+            
+
+            new DataTable('#myTable2', {
+                ajax: 'files/json/res_trafos.json',
+                paging: false,
+                columnDefs: [
+                    {target: 0, visible: false, searchable: false},
+                    {target: 1, visible: false, searchable: false},
+                    {target: 2, visible: false, searchable: false},
+                    {target: 4, visible: false, searchable: false},
+                    {target: 5, visible: false, searchable: false},
+                    {target: 7, visible: false, searchable: false}
+                    
+                ]
+            });
+            
+            
+            // Apply a search to the second table for the demo
+            //new DataTable.Api('#myTable2').search('New York').draw();
+
+            
+
+            new DataTable('#myTable3', {
+                ajax: 'files/json/res_salidas.json',
+                paging: false,
+                columnDefs: [
+                    {target: 0, visible: false, searchable: false},
+                    {target: 1, visible: false, searchable: false},
+                    {target: 2, visible: false, searchable: false},
+                    {target: 4, visible: false, searchable: false},
+                    {target: 5, visible: false, searchable: false},
+                    {target: 7, visible: false, searchable: false}
+                    
+                ]
+            });
+            new DataTable('#myTable4', {
+                ajax: 'files/json/res_reac_shunt.json',
+                paging: false,
+                columnDefs: [
+                    {target: 0, visible: false, searchable: false},
+                    {target: 1, visible: false, searchable: false},
+                    {target: 2, visible: false, searchable: false},
+                    {target: 4, visible: false, searchable: false},
+                    {target: 5, visible: false, searchable: false},
+                    {target: 7, visible: false, searchable: false}
+                    
+                ]
+            });
+            
+            new DataTable('#myTable5', {
+                ajax: 'files/json/res_reac_linea.json',
+                paging: false,
+                columnDefs: [
+                    {target: 0, visible: false, searchable: false},
+                    {target: 1, visible: false, searchable: false},
+                    {target: 2, visible: false, searchable: false},
+                    {target: 4, visible: false, searchable: false},
+                    {target: 5, visible: false, searchable: false},
+                    {target: 7, visible: false, searchable: false}
+                    
+                ]
+            });
+            
+            new DataTable('#myTable6', {
+                ajax: 'files/json/res_serie.json',
+                paging: false,
+                columnDefs: [
+                    {target: 0, visible: false, searchable: false},
+                    {target: 1, visible: false, searchable: false},
+                    {target: 2, visible: false, searchable: false},
+                    {target: 4, visible: false, searchable: false},
+                    {target: 5, visible: false, searchable: false},
+                    {target: 7, visible: false, searchable: false}
+                    
+                ]
+            });
+            
+            new DataTable('#myTable7', {
+                ajax: 'files/json/res_comp.json',
+                paging: false,
+                columnDefs: [
+                    {target: 0, visible: false, searchable: false},
+                    {target: 1, visible: false, searchable: false},
+                    {target: 2, visible: false, searchable: false},
+                    {target: 3, visible: false, searchable: false},
+                    {target: 4, visible: false, searchable: false},
+                    {target: 5, visible: false, searchable: false},
+                    {target: 7, visible: false, searchable: false}
+                    
+                ]
+            });
+            
+            new DataTable('#myTable8', {
+                ajax: 'files/json/res_aux.json',
+                paging: false,
+                columnDefs: [
+                    {target: 0, visible: false, searchable: false},
+                    {target: 1, visible: false, searchable: false},
+                    {target: 2, visible: false, searchable: false},
+                    {target: 3, visible: false, searchable: false},
+                    {target: 5, visible: false, searchable: false},
+                    {target: 7, visible: false, searchable: false}
+                    
+                ]
+            });
+            
+
+
+
+        }
+        function htmlResolucion(){
+            $('#resolucion').html(`
+                <div>
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item" role="presentation"><button class="nav-link active" href="#tab-table1" data-bs-toggle="tab" data-bs-target="#tab-table1">Lineas</button></li>
+                        <li><button class="nav-link" href="#tab-table2" data-bs-toggle="tab" data-bs-target="#tab-table2">Trafos</button></li>
+                        <li><button class="nav-link" href="#tab-table3" data-bs-toggle="tab" data-bs-target="#tab-table3">Salidas</button></li>
+                        <li><button class="nav-link" href="#tab-table4" data-bs-toggle="tab" data-bs-target="#tab-table4">Table Reac Shunt</button></li>
+                        <li><button class="nav-link" href="#tab-table5" data-bs-toggle="tab" data-bs-target="#tab-table5">Reac Linea</button></li>
+                        <li><button class="nav-link" href="#tab-table6" data-bs-toggle="tab" data-bs-target="#tab-table6">Cap. Serie</button></li>
+                        <li><button class="nav-link" href="#tab-table7" data-bs-toggle="tab" data-bs-target="#tab-table7">Comp. Sincronico</button></li>
+                        <li><button class="nav-link" href="#tab-table8" data-bs-toggle="tab" data-bs-target="#tab-table8">Aux. y Aut</button></li>
+                    </ul>
+                    <div class="tab-content pt-3">
+                        <div class="tab-pane show active" id="tab-table1">
+                            <table id="myTable1" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                <thead>
+
+
+                                    <tr><th>ID EMPRESA</th><th>EMPRESA</th><th>ID SUB EMPRESA</th><th>SUB EMPRESA</th><th>TIPO DE EQUIPO</th><th>N° ENRE</th><th>TIPO ELEM IDCAMMESA</th><th>#EQP CAMMESA</th><th>CODIGO TRANSENER</th><th>DESCRIPCION</th><th>TENSION [kV]</th><th>Long. [km]</th><th>INICIO</th><th>FIN</th><th>CLASE HASTA 31/11/2009</th><th>CLASE DESDE 1/2/2017</th><th>$/100km-h</th></tr>
+                                    
+                                    
+                                </thead>
+                            </table>
+                        </div>
+                        <div class="tab-pane" id="tab-table2">
+                            <table id="myTable2" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                <thead>
+
+                                    <tr><th>ID EMPRESA</th><th>EMPRESA</th><th>ID SUB EMPRESA</th><th>SUB EMPRESA</th><th>TIPO DE EQUIPO</th><th>TIPO ELEM IDCAMMESA</th><th>#EQP CAMMESA</th><th>CODIGO TRANSENER</th><th>ESTACION</th><th>DESCRIPCION</th><th>TENSION PRIMARIO kV</th><th>POTENCIA MVA</th><th>INICIO</th><th>FIN</th><th>$/MVA-h</th></tr>
+                                    
+                                </thead>
+                            </table>
+                        </div>
+                        <div class="tab-pane" id="tab-table3">
+                            <table id="myTable3" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                <thead>
+
+                                    <tr><th>ID EMPRESA</th><th>EMPRESA</th><th>ID SUB EMPRESA</th><th>SUB EMPRESA</th><th>TIPO DE EQUIPO</th><th>TIPO ELEM IDCAMMESA</th><th>#EQP CAMMESA</th><th>CODIGO TRANSENER</th><th>ESTACION</th><th>DESCRIPCION</th><th>TENSION kV</th><th>INICIO</th><th>FIN</th><th>$/h</th></tr>
+                                    
+                                </thead>
+                            </table>
+                        </div>
+                        <div class="tab-pane" id="tab-table4">
+                            <table id="myTable4" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                <thead>
+
+                                    <tr><th>ID EMPRESA</th><th>EMPRESA</th><th>ID SUB EMPRESA</th><th>SUB EMPRESA</th><th>TIPO DE EQUIPO</th><th>TIPO ELEM IDCAMMESA</th><th>#EQP CAMMESA</th><th>CODIGO TRANSENER</th><th>ESTACION</th><th>DESCRIPCION</th><th>TENSION kV</th><th>POTENCIA MVA</th><th>INICIO</th><th>FIN</th><th>$/MVAr-h</th></tr>
+                                    
+                                </thead>
+                            </table>
+                        </div>
+                        <div class="tab-pane" id="tab-table5">
+                            <table id="myTable5" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                <thead>
+
+                                    <tr><th>ID EMPRESA</th><th>EMPRESA</th><th>ID SUB EMPRESA</th><th>SUB EMPRESA</th><th>TIPO DE EQUIPO</th><th>TIPO ELEM IDCAMMESA</th><th>#EQP CAMMESA</th><th>CODIGO TRANSENER</th><th>ESTACION</th><th>DESCRIPCION</th><th>TENSION kV</th><th>POTENCIA MVA</th><th>INICIO</th><th>FIN</th><th>INTERR. SI/NO</th><th>$/MVAr-h</th></tr>
+                                    
+                                </thead>
+                            </table>
+                        </div>
+                        <div class="tab-pane" id="tab-table6">
+                            <table id="myTable6" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                <thead>
+
+                                    <tr><th>ID EMPRESA</th><th>EMPRESA</th><th>ID SUB EMPRESA</th><th>SUB EMPRESA</th><th>TIPO DE EQUIPO</th><th>TIPO ELEM IDCAMMESA</th><th>#EQP CAMMESA</th><th>CODIGO TRANSENER</th><th>ESTACION</th><th>DESCRIPCION</th><th>TENSION kV</th><th>POTENCIA MVAr</th><th>INICIO</th><th>FIN</th><th>CARGOS$/MVAr-h</th></tr>
+                                    
+                                </thead>
+                            </table>
+                        </div>
+                        <div class="tab-pane" id="tab-table7">
+                            <table id="myTable7" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                <thead>
+
+                                    <tr><th>ID EMPRESA</th><th>EMPRESA</th><th>ID SUB EMPRESA</th><th>SUB EMPRESA</th><th>TIPO DE EQUIPO</th><th>TIPO ELEM IDCAMMESA</th><th>#EQP CAMMESA</th><th>CODIGO TRANSENER</th><th>ESTACION</th><th>DESCRIPCION</th><th>TENSION kV</th><th>POTENCIA MVA</th><th>INICIO</th><th>FIN</th><th>$/MVAr-h</th></tr>
+                                    
+                                </thead>
+                            </table>
+                        </div>
+                        <div class="tab-pane" id="tab-table8">
+                            <table id="myTable8" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                <thead>
+
+                                    <tr><th>ID EMPRESA</th><th>EMPRESA</th><th>ID SUB EMPRESA</th><th>SUB EMPRESA</th><th>TIPO DE EQUIPO</th><th>TIPO ELEM IDCAMMESA</th><th>#EQP CAMMESA</th><th>CODIGO TRANSENER</th><th>ESTACION</th><th>DESCRIPCION</th><th>INICIO</th><th>FIN</th><th>MONEDA</th><th>$/MES</th></tr>
+                                    
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>                    
+            `);
+
+/*
+
+                                    
+                                    
+                                    
+                                    
+                                    
+*/
+        }
         
         function loadRes(empresa){
             $("#principal").css("display","flex");
@@ -820,13 +1075,14 @@
                 <table id='cuadroResumen' class='display nowrap compact' ></table>
             `);
 
-            fetch("files/json/cuadroResumen.json?3")
+            fetch("files/json/cuadroResumen.json?5")
             .then(res => {
                 console.log('res',res);
                 return res.json();
             })
             .then(data => {
                 console.log('data',data);
+                
                 miTabla = new DataTable('#cuadroResumen', {
                     colReorder: false,
                     ordering: false,  // Deshabilitar el reordenamiento para toda la tabla
@@ -847,24 +1103,31 @@
                     }),
                     columnDefs: [
                         {
+                            targets: 0,
+                            //data: 0,
+                            render: function (data, type, row, meta) {
+                                return '<a href="#' + data.valor + '">' +
+                                    '<div class="grey">' +
+                                    '<div>' + data.valor 
+                                        +' </div><div class="info"> '+ data.provisorio["Fecha de publicacion"] 
+                                            +'</div>'+ '<div class="info"> '+ data.definitivo["Fecha de publicacion"] 
+                                                +'</div>' +
+                                    '</div>'
+                                    + '</a>';
+                            },
+                            orderable: false  // Deshabilita el reordenamiento de la primera columna
+                        },
+                        {
                             targets: [1, 2, 3, 4, 5, 6, 7, 8],
                             render: function (data, type, row, meta) {
                                 return (
-                                    '<span class="' +
-                                    (data == 'Pendiente' ? 'red' : (data == 'Iniciado' ? 'yellow' : 'green')) +
+                                    '<div class="' +
+                                    (data.valor == 'Pendiente' ? 'red' : (data.valor == 'Iniciado' ? 'yellow' : 'green')) +
                                     '">' +
-                                    data +
-                                    '</span>'
+                                    '<div>' + data.valor +' </div><div class="info"> '+ data.Res.replaceAll("Res. ENRE ","") +'</div>'+ '<div class="info"> '+ data["Equip."].substr(-5) +'</div>' +
+                                    '</div>'
                                 );
                             }
-                        },
-                        {
-                            targets: 0,
-                            data: 0,
-                            render: function (data, type, row, meta) {
-                                return '<a href="#' + data + '">' + data + '</a>';
-                            },
-                            orderable: false  // Deshabilita el reordenamiento de la primera columna
                         }
                     ],
                     paging: false,
